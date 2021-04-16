@@ -6,9 +6,9 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-material.css";
 
-import Addcustomer from "../Components/Customers/Addcustomer";
-import Editcustomer from "../Components/Customers/Editcustomer";
-function Customerlist() {
+import Addcustomer from "./Addcustomer";
+
+function Carlist() {
   const [customers, setCustomers] = useState([]);
 
   useEffect(() => {
@@ -23,18 +23,6 @@ function Customerlist() {
     });
   };
 
-  const updateCustomer = (customer, link) => {
-    window.confirm("Are you sure?");
-    fetch(link, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(customer),
-    })
-      .then((res) => fetchCustomers())
-      .catch((err) => console.error(err));
-  };
   const saveCustomer = (customer) => {
     window.confirm("Are you sure?");
     fetch("https://customerrest.herokuapp.com/api/customers", {
@@ -63,13 +51,6 @@ function Customerlist() {
     { field: "city", sortable: true, filter: true, width: 100 },
     { field: "email", sortable: true, filter: true },
     { field: "phone", sortable: true, filter: true },
-    {
-      headerName: "",
-      width: 100,
-      cellRendererFramework: (params) => (
-        <Editcustomer updateCustomer={updateCustomer} customer={params} />
-      ),
-    },
     {
       headerName: "",
       width: 100,
@@ -102,4 +83,4 @@ function Customerlist() {
   );
 }
 
-export default Customerlist;
+export default Carlist;

@@ -7,7 +7,7 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 
-export default function Editcar(props) {
+export default function Editcustomer(props) {
   const [open, setOpen] = React.useState(false);
   const [customer, setCustomers] = React.useState({
     firstname: "",
@@ -55,8 +55,7 @@ export default function Editcar(props) {
         aria-labelledby="form-dialog-title"
       >
         <DialogTitle id="form-dialog-title">Edit car</DialogTitle>
-        <DialogContent></DialogContent>
-        <DialogActions>
+        <DialogContent>
           <TextField
             autoFocus
             margin="dense"
@@ -115,6 +114,8 @@ export default function Editcar(props) {
             label="Phone no:"
             fullWidth
           />
+        </DialogContent>
+        <DialogActions>
           <Button onClick={handleClose} color="primary">
             Cancel
           </Button>

@@ -2,15 +2,18 @@ import React, { useEffect, useState } from "react";
 
 import { AgGridReact } from "ag-grid-react";
 import IconButton from "@material-ui/core/IconButton";
+
 import DeleteIcon from "@material-ui/icons/Delete";
 import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-material.css";
 
 import Addcustomer from "../Components/Customers/Addcustomer";
 import Editcustomer from "../Components/Customers/Editcustomer";
+import CustomerTraininglist from "./Customers/CustomerTraininglist";
+
 function Customerlist() {
   const [customers, setCustomers] = useState([]);
-
+  const [trainings, setTrainings] = useState([]);
   useEffect(() => {
     fetchCustomers();
   }, []);
@@ -23,6 +26,19 @@ function Customerlist() {
     });
   };
 
+  const saveTraining = (training) => {
+    fetch("https://customerrest.herokuapp.com/api/trainings", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(training),
+    })
+      .then((res) =>
+        this.setState({ open: true, message: "Added new training" })
+      )
+      .catch((err) => console.error(err));
+  };
   const updateCustomer = (customer, link) => {
     window.confirm("Are you sure?");
     fetch(link, {
@@ -56,6 +72,13 @@ function Customerlist() {
   };
 
   const columns = [
+    {
+      headerName: "ID",
+      field: "links[0].href",
+      Cell: (row) => {
+        return row.value.replace(/[\D]/g, "");
+      },
+    },
     { field: "firstname", sortable: true, filter: true },
     { field: "lastname", sortable: true, filter: true },
     { field: "streetaddress", sortable: true, filter: true, width: 100 },
@@ -64,10 +87,19 @@ function Customerlist() {
     { field: "email", sortable: true, filter: true },
     { field: "phone", sortable: true, filter: true },
     {
+      headerName: "trainings",
+      field: "links[2].href",
+      width: 130,
+      cellRendererFramework: (params) => (
+        <CustomerTraininglist link={params.data.links[2].href} />
+      ),
+    },
+    {
       headerName: "",
+      field: "links[0].href",
       width: 100,
       cellRendererFramework: (params) => (
-        <Editcustomer updateCustomer={updateCustomer} customer={params} />
+        <Editcustomer updateCustomer={updateCustomer} customer={params.data} />
       ),
     },
     {

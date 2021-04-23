@@ -8,49 +8,47 @@ import "ag-grid-community/dist/styles/ag-theme-material.css";
 
 import Addcustomer from "./Addcustomer";
 
-function Carlist() {
-  const [customers, setCustomers] = useState([]);
+function Traininglist() {
+  const [trainings, setTrainings] = useState([]);
 
   useEffect(() => {
-    fetchCustomers();
+    fetchTrainings();
   }, []);
 
-  const deleteCustomer = (params) => {
+  const deleteTrainings = (params) => {
     console.log(params);
     fetch(params, { method: "DELETE" }).then((response) => {
-      if (response.ok) fetchCustomers();
+      if (response.ok) fetchTrainings();
       else alert("Something terrible happened");
     });
   };
 
-  const saveCustomer = (customer) => {
+  const saveTrainings = (training) => {
     window.confirm("Are you sure?");
-    fetch("https://customerrest.herokuapp.com/api/customers", {
+    fetch("https://customerrest.herokuapp.com/api/trainings", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(customer),
+      body: JSON.stringify(training),
     })
-      .then((res) => fetchCustomers())
+      .then((res) => fetchTrainings())
       .catch((err) => console.error(err));
   };
 
-  const fetchCustomers = () => {
-    fetch("https://customerrest.herokuapp.com/api/customers")
+  const fetchTrainings = () => {
+    fetch("https://customerrest.herokuapp.com/api/trainings")
       .then((response) => response.json())
-      .then((data) => setCustomers(data.content))
+      .then((data) => setTrainings(data.content))
       .catch((err) => console.error(err));
   };
 
   const columns = [
-    { field: "firstname", sortable: true, filter: true },
-    { field: "lastname", sortable: true, filter: true },
-    { field: "streetaddress", sortable: true, filter: true, width: 100 },
-    { field: "postcode", sortable: true, filter: true },
-    { field: "city", sortable: true, filter: true, width: 100 },
-    { field: "email", sortable: true, filter: true },
-    { field: "phone", sortable: true, filter: true },
+    { field: "date", sortable: true, filter: true },
+    { field: "durationinmins", sortable: true, filter: true },
+    { field: "activity", sortable: true, filter: true, width: 100 },
+    { field: "customer", sortable: true, filter: true },
+
     {
       headerName: "",
       width: 100,
@@ -58,7 +56,7 @@ function Carlist() {
       cellRendererFramework: (params) => (
         <IconButton
           color="secondary"
-          onClick={() => deleteCustomer(params.data.links[0].href)}
+          onClick={() => deleteTrainings(params.data.links[0].href)}
         >
           <DeleteIcon />
         </IconButton>
@@ -71,9 +69,9 @@ function Carlist() {
       className="ag-theme-material"
       style={{ height: 600, width: "90%", margin: "auto" }}
     >
-      <Addcustomer saveCustomer={saveCustomer} />
+      <Addcustomer saveTrainers={saveTrainings} />
       <AgGridReact
-        rowData={customers}
+        rowData={trainings}
         columnDefs={columns}
         pagination={true}
         paginationPageSize={10}
@@ -83,4 +81,4 @@ function Carlist() {
   );
 }
 
-export default Carlist;
+export default Traininglist;

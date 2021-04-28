@@ -13,7 +13,7 @@ import CustomerTraininglist from "./Customers/CustomerTraininglist";
 
 function Customerlist() {
   const [customers, setCustomers] = useState([]);
-  const [trainings, setTrainings] = useState([]);
+
   useEffect(() => {
     fetchCustomers();
   }, []);
@@ -26,19 +26,6 @@ function Customerlist() {
     });
   };
 
-  const saveTraining = (training) => {
-    fetch("https://customerrest.herokuapp.com/api/trainings", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(training),
-    })
-      .then((res) =>
-        this.setState({ open: true, message: "Added new training" })
-      )
-      .catch((err) => console.error(err));
-  };
   const updateCustomer = (customer, link) => {
     window.confirm("Are you sure?");
     fetch(link, {
@@ -69,6 +56,7 @@ function Customerlist() {
       .then((response) => response.json())
       .then((data) => setCustomers(data.content))
       .catch((err) => console.error(err));
+    console.log(customers);
   };
 
   const columns = [

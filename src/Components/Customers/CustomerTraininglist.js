@@ -83,8 +83,7 @@ export default function CustomerTraininglist(props) {
               ))}
           </Table>
 
-          <Button color="secondary">Edit training</Button>
-          <Button color="primary">Add training</Button>
+          <Button color="primary">View all training</Button>
         </DialogContent>
         <DialogActions></DialogActions>
       </Dialog>

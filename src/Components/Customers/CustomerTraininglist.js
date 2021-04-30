@@ -50,6 +50,7 @@ export default function CustomerTraininglist(props) {
         open={open}
         onClose={handleClose}
         aria-labelledby="form-dialog-title"
+        style={{ width: 2000 }}
       >
         <DialogTitle id="form-dialog-title">Trainings</DialogTitle>
         <DialogContent>

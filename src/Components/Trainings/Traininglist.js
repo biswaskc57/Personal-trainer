@@ -20,9 +20,7 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
 import DeleteIcon from "@material-ui/icons/Delete";
 import FilterListIcon from "@material-ui/icons/FilterList";
-
 import moment from "moment";
-
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
     return -1;
@@ -50,12 +48,18 @@ function stableSort(array, comparator) {
 }
 
 const headCells = [
-  { id: "" },
-  { id: "Activity", numeric: false, disablePadding: false, label: "Activity" },
+  { id: "id", label: "Id" },
   {
-    id: "date",
+    id: "Activity",
     numeric: false,
     disablePadding: true,
+    label: "Activity",
+    width: "100px",
+  },
+  {
+    id: "date",
+    numeric: true,
+    disablePadding: false,
     label: "Date",
   },
 
@@ -84,7 +88,7 @@ function EnhancedTableHead(props) {
             indeterminate={numSelected > 0 && numSelected < rowCount}
             checked={rowCount > 0 && numSelected === rowCount}
             onChange={onSelectAllClick}
-            inputProps={{ "aria-label": "select all desserts" }}
+            inputProps={{ "aria-label": "select all trainings" }}
           />
         </TableCell>
         {headCells.map((headCell) => (
@@ -169,7 +173,7 @@ const EnhancedTableToolbar = (props) => {
           id="tableTitle"
           component="div"
         >
-          Nutrition
+          Trainings
         </Typography>
       )}
 
@@ -221,7 +225,7 @@ const useStyles = makeStyles((theme) => ({
 export default function EnhancedTable() {
   const classes = useStyles();
   const [order, setOrder] = React.useState("asc");
-  const [orderBy, setOrderBy] = React.useState("calories");
+  const [orderBy, setOrderBy] = React.useState("activity");
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
@@ -278,7 +282,6 @@ export default function EnhancedTable() {
   const isSelected = (name) => selected.indexOf(name) !== -1;
 
   const [training, setTrainings] = React.useState([]);
-  const [open, setOpen] = React.useState(false);
 
   useEffect(() => {
     fetchCustomers();
@@ -345,7 +348,9 @@ export default function EnhancedTable() {
                       >
                         {training.links[0].href.split("/")[5]}
                       </TableCell>
-                      <TableCell align="right">{training.activity}</TableCell>
+                      <TableCell align="right" padding="none">
+                        {training.activity}
+                      </TableCell>
                       <TableCell align="right">
                         {moment(training.date).format("MMMM DD YYYY, h:mm")}
                       </TableCell>

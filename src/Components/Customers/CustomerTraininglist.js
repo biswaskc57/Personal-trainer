@@ -19,9 +19,12 @@ export default function CustomerTraininglist(props) {
 
   useEffect(() => {
     fetchCustomers();
+    // eslint-disable-next-line
   }, []);
 
   const fetchCustomers = () => {
+    console.log(props);
+    console.log(props.link);
     fetch(props.link)
       .then((response) => response.json())
       .then((data) => setTrainings(data.content))
@@ -42,7 +45,7 @@ export default function CustomerTraininglist(props) {
   };
 
   return (
-    <div>
+    <div style={{ height: 600, width: "90%", margin: "auto" }}>
       <Button color="primary" onClick={handleClickOpen}>
         Training
       </Button>
@@ -50,11 +53,15 @@ export default function CustomerTraininglist(props) {
         open={open}
         onClose={handleClose}
         aria-labelledby="form-dialog-title"
-        style={{ width: 2000 }}
       >
         <DialogTitle id="form-dialog-title">Trainings</DialogTitle>
         <DialogContent>
-          <Table striped bordered hover>
+          <Table
+            className="table"
+            style={{ margin: "auto" }}
+            autoFocus
+            margin="dense"
+          >
             <thead>
               <tr>
                 <th>Training ID</th>
@@ -83,10 +90,10 @@ export default function CustomerTraininglist(props) {
                 </tbody>
               ))}
           </Table>
-
-          <Button color="primary">View all training</Button>
         </DialogContent>
-        <DialogActions></DialogActions>
+        <DialogActions>
+          <Button color="primary">View all training</Button>
+        </DialogActions>
       </Dialog>
     </div>
   );

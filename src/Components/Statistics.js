@@ -14,50 +14,9 @@ import {
 function Statistics() {
   const [trainings, setTrainings] = useState([]);
 
-  const data = [
-    {
-      name: "Page A",
-      uv: 4000,
-      pv: 2400,
-      amt: 2400,
-    },
-    {
-      name: "Page B",
-      uv: 3000,
-      pv: 1398,
-      amt: 2210,
-    },
-    {
-      name: "Page C",
-      uv: 2000,
-      pv: 9800,
-      amt: 2290,
-    },
-    {
-      name: "Page D",
-      uv: 2780,
-      pv: 3908,
-      amt: 2000,
-    },
-    {
-      name: "Page E",
-      uv: 1890,
-      pv: 4800,
-      amt: 2181,
-    },
-    {
-      name: "Page F",
-      uv: 2390,
-      pv: 3800,
-      amt: 2500,
-    },
-    {
-      name: "Page G",
-      uv: 3490,
-      pv: 4300,
-      amt: 2100,
-    },
-  ];
+  const sum = (arr) => arr.reduce((sum, curr) => sum + curr, 0);
+  console.log(sum);
+
   console.log("o lala lala");
 
   useEffect(() => {
@@ -73,7 +32,36 @@ function Statistics() {
     console.log(trainings);
   };
 
+  const activities = trainings
+    .map((item) => ({
+      name: item.activity,
+      duration: item.duration,
+    }))
+    .reduce((acc, item) => {
+      if (acc[item.name]) {
+        acc[item.name].push(item.duration);
+      } else {
+        acc[item.name] = [item.duration];
+      }
+      return acc;
+    }, {});
+
+  const totalSum = Object.keys(activities).reduce((acc, key) => {
+    acc[key] = sum(activities[key]);
+    return acc;
+  }, {});
+
+  console.log(activities);
   console.log(trainings);
+  console.log(totalSum);
+
+  const data = Object.keys(activities).reduce((acc, key) => {
+    acc.push({ name: key, sum: totalSum[key] });
+    return acc;
+  }, []);
+
+  console.log(data);
+
   return (
     <div>
       <h1>Statistics:</h1>
@@ -81,7 +69,7 @@ function Statistics() {
       <BarChart
         width={1000}
         height={600}
-        data={trainings}
+        data={data}
         margin={{
           top: 5,
           right: 30,
@@ -90,11 +78,11 @@ function Statistics() {
         }}
       >
         <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="activity" />
+        <XAxis dataKey="name" />
         <YAxis />
         <Tooltip />
         <Legend />
-        <Bar dataKey="duration" fill="#8884d8" />
+        <Bar dataKey="sum" fill="#8884d8" />
       </BarChart>
 
       <h1>Hello</h1>

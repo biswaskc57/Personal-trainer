@@ -58,7 +58,7 @@ export default function CustomerTraininglist(props) {
         <DialogContent>
           <Table
             className="table"
-            style={{ margin: "auto" }}
+            style={{ margin: "auto", border: "1px" }}
             autoFocus
             margin="dense"
           >

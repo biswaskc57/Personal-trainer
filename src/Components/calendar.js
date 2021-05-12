@@ -11,6 +11,11 @@ function CalendarPage() {
   const [events, setEvents] = useState([]);
   let eventList = [];
   let startDate, endDate;
+
+  useEffect(() => {
+    getAlltrainings();
+    // eslint-disable-next-line
+  }, []);
   const getAlltrainings = async () => {
     try {
       const { data } = await axios.get(
@@ -38,10 +43,6 @@ function CalendarPage() {
       console.log(err);
     }
   };
-  useEffect(() => {
-    getAlltrainings();
-    // eslint-disable-next-line
-  }, []);
 
   return (
     <div>

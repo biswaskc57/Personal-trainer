@@ -26,8 +26,8 @@ export default function Addtraining(props) {
     setTraining({ ...training, [e.target.name]: e.target.value });
   };
 
-  const addCustomer = () => {
-    props.saveCustomer(training);
+  const addTraining = () => {
+    props.saveTraining(training);
     handleClose();
   };
 
@@ -70,7 +70,7 @@ export default function Addtraining(props) {
           <Button onClick={handleClose} color="primary">
             Cancel
           </Button>
-          <Button onClick={addCustomer} color="primary">
+          <Button onClick={addTraining} color="primary">
             Save
           </Button>
         </DialogActions>

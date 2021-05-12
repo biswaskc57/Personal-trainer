@@ -63,8 +63,10 @@ function Statistics() {
   console.log(data);
 
   return (
-    <div>
-      <h1>Statistics:</h1>
+    <div style={{ margin: " auto" }}>
+      <h1 style={{ margin: "auto" }}>
+        Total number of minutes per activities:
+      </h1>
 
       <BarChart
         width={1000}
@@ -84,8 +86,6 @@ function Statistics() {
         <Legend />
         <Bar dataKey="sum" fill="#8884d8" />
       </BarChart>
-
-      <h1>Hello</h1>
     </div>
   );
 }

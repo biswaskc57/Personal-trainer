@@ -6,8 +6,6 @@ import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
 import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-material.css";
-import Typography from "@material-ui/core/Typography";
-import AppBar from "@material-ui/core/AppBar";
 import Addcustomer from "../Components/Customers/Addcustomer";
 import Editcustomer from "../Components/Customers/Editcustomer";
 import CustomerTraininglist from "./Customers/CustomerTraininglist";

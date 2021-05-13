@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 
 import moment from "moment";
 import { Table } from "react-bootstrap";
@@ -12,6 +12,7 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import "../../App.css";
 
 export default function CustomerTraininglist(props) {
   const [training, setTrainings] = React.useState([]);
@@ -23,7 +24,6 @@ export default function CustomerTraininglist(props) {
   }, []);
 
   const fetchCustomers = () => {
-    console.log(props);
     console.log(props.link);
     fetch(props.link)
       .then((response) => response.json())
@@ -44,6 +44,31 @@ export default function CustomerTraininglist(props) {
     setOpen(false);
   };
 
+  const columns = [
+    {
+      headerName: "Activity",
+      field: "activity",
+      sortable: true,
+      filter: true,
+      resizable: true,
+    },
+    {
+      headerName: "Duration",
+      field: "duration",
+      sortable: true,
+      filter: true,
+      resizable: true,
+    },
+
+    {
+      headerName: "Date",
+      field: "date",
+      sortable: true,
+      filter: true,
+      resizable: true,
+    },
+  ];
+
   return (
     <div style={{ height: 600, width: "90%", margin: "auto" }}>
       <Button color="primary" onClick={handleClickOpen}>
@@ -56,12 +81,7 @@ export default function CustomerTraininglist(props) {
       >
         <DialogTitle id="form-dialog-title">Trainings</DialogTitle>
         <DialogContent>
-          <Table
-            className="table"
-            style={{ margin: "auto", border: "1px" }}
-            autoFocus
-            margin="dense"
-          >
+          <Table striped bordered hover class="customerTable">
             <thead>
               <tr>
                 <th>Training ID</th>
@@ -84,7 +104,7 @@ export default function CustomerTraininglist(props) {
                     <td>
                       {moment(training.date).format("MMMM DD YYYY, h:mm")}
                     </td>
-                    <td>{training.duration}</td>
+                    <td>{training.duration} min</td>
                     <td>{training.activity}</td>
                   </tr>
                 </tbody>

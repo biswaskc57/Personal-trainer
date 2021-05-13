@@ -1,13 +1,19 @@
 import React, { useState, useEffect } from "react";
-import Tooltip from "@material-ui/core/Tooltip";
 import { AgGridReact } from "ag-grid-react";
 import moment from "moment";
+import Addtraining from "./Addtraining";
+import IconButton from "@material-ui/core/IconButton";
 
+import DeleteIcon from "@material-ui/icons/Delete";
 export default function Traininglist() {
   const [training, setTrainings] = useState([]);
-  const [update, setUpdate] = useState(0);
-
-  React.useEffect(() => {
+  const [customers, setCustomers] = useState([]);
+  useEffect(() => {
+    fetchTrainings();
+    fetchCustomers();
+    // eslint-disable-next-line
+  }, []);
+  const fetchTrainings = () => {
     fetch("https://customerrest.herokuapp.com/gettrainings")
       .then((response) => response.json())
       .then((responseData) => {
@@ -17,9 +23,57 @@ export default function Traininglist() {
         console.log(training);
       })
       .catch((error) => console.log(error));
-  }, []);
+  };
+
+  const saveTrainings = (training) => {
+    window.confirm("Are you sure?");
+    fetch("https://customerrest.herokuapp.com/api/trainings", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(training),
+    })
+      .then((res) => fetchTrainings())
+      .catch((err) => console.error(err));
+  };
+  const fetchCustomers = () => {
+    fetch("https://customerrest.herokuapp.com/api/customers")
+      .then((response) => response.json())
+      .then((data) => setCustomers(data.content))
+      .catch((err) => console.error(err));
+    console.log(customers);
+  };
+
+  const deleteTraining = (params) => {
+    var confirm = window.confirm(
+      "Are you sure you want to delete training no " + params
+    );
+    console.log(params);
+    if (confirm == true) {
+      fetch("https://customerrest.herokuapp.com/api/trainings/" + params, {
+        method: "DELETE",
+      }).then((response) => {
+        if (response.ok) {
+          fetchTrainings();
+          alert("Training " + params + " has been deleted");
+        } else alert("Something terrible happened");
+      });
+    } else {
+      alert("Training " + params + " was not deleted!");
+    }
+  };
 
   const columns = [
+    {
+      headerName: "Id",
+      field: "id",
+      sortable: true,
+      filter: true,
+      resizable: true,
+      width: 120,
+      marginRight: 100,
+    },
     {
       headerName: "Activity",
       field: "activity",
@@ -34,6 +88,7 @@ export default function Traininglist() {
       filter: true,
       resizable: true,
     },
+
     {
       headerName: "Date",
       field: "date",
@@ -48,6 +103,19 @@ export default function Traininglist() {
       filter: true,
       resizable: true,
     },
+    {
+      headerName: "",
+      width: 100,
+      field: "id",
+      cellRendererFramework: (params) => (
+        <IconButton
+          color="secondary"
+          onClick={() => deleteTraining(params.data.id)}
+        >
+          <DeleteIcon />
+        </IconButton>
+      ),
+    },
   ];
 
   return (
@@ -55,23 +123,24 @@ export default function Traininglist() {
       className="ag-theme-material"
       style={{ height: 600, width: "100%", margin: "auto" }}
     >
-      <Tooltip TransitionProps={{ timeout: 600 }} title="Add">
-        <AgGridReact
-          style={{ width: "100%", height: "100%;" }}
-          rowHeight={60}
-          rowWidth={200}
-          columnDefs={columns}
-          rowData={training.map((item) => ({
-            ...item,
-            date: moment(item.date).format("LLL"),
-            duration: item.duration + " min.",
-            customer: item.customer.firstname + " " + item.customer.lastname,
-          }))}
-          pagination={true}
-          paginationPageSize={10}
-          suppressCellSelection={true}
-        />
-      </Tooltip>
+      <Addtraining saveTraining={saveTrainings} customers={customers} />
+      <AgGridReact
+        style={{ width: "100%", height: "100%;" }}
+        rowHeight={60}
+        rowWidth={200}
+        columnDefs={columns}
+        rowData={training.map((item) => ({
+          ...item,
+          date: moment(item.date).format("LLL"),
+
+          duration: item.duration + " min.",
+
+          customer: item.customer.firstname + " " + item.customer.lastname,
+        }))}
+        pagination={true}
+        paginationPageSize={10}
+        suppressCellSelection={true}
+      />
     </div>
   );
 }

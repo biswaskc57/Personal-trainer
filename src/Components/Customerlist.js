@@ -18,14 +18,27 @@ function Customerlist() {
     // eslint-disable-next-line
   }, []);
 
-  const deleteCustomer = (params) => {
+  const deleteCustomer = (params, firstname, lastname) => {
+    var confirm = window.confirm(
+      "Are you sure you want to delete customer " +
+        firstname +
+        " " +
+        lastname +
+        "?"
+    );
     console.log(params);
-    fetch(params, { method: "DELETE" }).then((response) => {
-      if (response.ok) fetchCustomers();
-      else alert("Something terrible happened");
-    });
-  };
+    console.log(firstname);
 
+    if (confirm == true) {
+      console.log(params);
+      fetch(params, { method: "DELETE" }).then((response) => {
+        if (response.ok) fetchCustomers();
+        else alert("Something terrible happened");
+      });
+    } else {
+      alert("Customer " + firstname + " " + lastname + " was not deleted!");
+    }
+  };
   const updateCustomer = (customer, link) => {
     window.confirm("Are you sure?");
     fetch(link, {
@@ -60,17 +73,17 @@ function Customerlist() {
   };
 
   const columns = [
-    { field: "firstname", sortable: true, filter: true },
-    { field: "lastname", sortable: true, filter: true },
-    { field: "streetaddress", sortable: true, filter: true, width: 100 },
-    { field: "postcode", sortable: true, filter: true },
-    { field: "city", sortable: true, filter: true, width: 100 },
-    { field: "email", sortable: true, filter: true },
-    { field: "phone", sortable: true, filter: true },
+    { field: "firstname", sortable: true, filter: true, width: 130 },
+    { field: "lastname", sortable: true, filter: true, width: 130 },
+    { field: "streetaddress", sortable: true, filter: true, width: 200 },
+    { field: "postcode", sortable: true, filter: true, width: 130 },
+    { field: "city", sortable: true, filter: true, width: 130 },
+    { field: "email", sortable: true, filter: true, width: 200 },
+    { field: "phone", sortable: true, filter: true, width: 160 },
     {
       headerName: "trainings",
       field: "links[2].href",
-      width: 130,
+      width: 120,
       cellRendererFramework: (params) => (
         <CustomerTraininglist link={params.data.links[2].href} />
       ),
@@ -85,12 +98,19 @@ function Customerlist() {
     },
     {
       headerName: "",
-      width: 100,
+      width: 60,
       field: "links[0].href",
       cellRendererFramework: (params) => (
         <IconButton
           color="secondary"
-          onClick={() => deleteCustomer(params.data.links[0].href)}
+          onClick={() =>
+            deleteCustomer(
+              params.data.links[0].href,
+              params.data.firstname,
+              params.data.lastname
+            )
+          }
+          id={params.data.id}
         >
           <DeleteIcon />
         </IconButton>
@@ -101,13 +121,14 @@ function Customerlist() {
   return (
     <div
       className="ag-theme-material"
-      style={{ height: 600, width: "90%", margin: "auto" }}
+      style={{ height: 700, width: "100%", margin: "auto" }}
     >
       <Addcustomer saveCustomer={saveCustomer} />
 
       <AgGridReact
-        style={{ width: "100%", height: "100%;" }}
-        rowHeight={60}
+        style={{ width: "10%", height: "100%;" }}
+        rowHeight={55}
+        rowWidth={20}
         rowData={customers}
         columnDefs={columns}
         pagination={true}

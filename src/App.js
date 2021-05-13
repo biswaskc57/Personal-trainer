@@ -22,7 +22,7 @@ function App() {
       alignSelf: "flex-end",
     },
   }));
-  const classes = useStyles();
+
   return (
     <div className="App">
       <Navigator />

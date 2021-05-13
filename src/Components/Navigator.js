@@ -110,7 +110,7 @@ export default function Navigator() {
       >
         <Toolbar>
           <IconButton
-            color="inherit"
+            color="black"
             aria-label="open drawer"
             onClick={handleDrawerOpen}
             edge="start"
@@ -145,7 +145,7 @@ export default function Navigator() {
           <Divider />
 
           <Link to="/" style={{ marginRight: 10 }}>
-            <List>
+            <List style={{ width: 100 }}>
               {["Customers"].map((text, index) => (
                 <ListItem button key={text}>
                   <ListItemIcon>

@@ -85,7 +85,11 @@ function Customerlist() {
       field: "links[2].href",
       width: 120,
       cellRendererFramework: (params) => (
-        <CustomerTraininglist link={params.data.links[2].href} />
+        <CustomerTraininglist
+          link={params.data.links[2].href}
+          firstname={params.data.firstname}
+          lastname={params.data.lastname}
+        />
       ),
     },
     {

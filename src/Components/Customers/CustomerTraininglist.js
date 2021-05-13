@@ -25,6 +25,7 @@ export default function CustomerTraininglist(props) {
 
   const fetchCustomers = () => {
     console.log(props.link);
+    console.log(props.firstname);
     fetch(props.link)
       .then((response) => response.json())
       .then((data) => setTrainings(data.content))
@@ -79,12 +80,15 @@ export default function CustomerTraininglist(props) {
         onClose={handleClose}
         aria-labelledby="form-dialog-title"
       >
-        <DialogTitle id="form-dialog-title">Trainings</DialogTitle>
+        <DialogTitle id="form-dialog-title">
+          {" "}
+          {props.firstname + " " + props.lastname}'s Training:
+        </DialogTitle>
         <DialogContent>
           <Table striped bordered hover class="customerTable">
             <thead>
               <tr>
-                <th>Training ID</th>
+                <th>Id</th>
                 <th>Date</th>
                 <th>Duration &nbsp;</th>
                 <th>Activity</th>

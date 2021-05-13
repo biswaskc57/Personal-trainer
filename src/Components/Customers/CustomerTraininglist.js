@@ -80,7 +80,10 @@ export default function CustomerTraininglist(props) {
         onClose={handleClose}
         aria-labelledby="form-dialog-title"
       >
-        <DialogTitle id="form-dialog-title">
+        <DialogTitle
+          id="form-dialog-title"
+          style={{ margin: "auto", color: "green" }}
+        >
           {" "}
           {props.firstname + " " + props.lastname}'s Training:
         </DialogTitle>

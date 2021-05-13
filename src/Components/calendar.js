@@ -9,7 +9,7 @@ const localizer = momentLocalizer(moment);
 
 function CalendarPage() {
   const [events, setEvents] = useState([]);
-  let eventList = [];
+  let eventLists = [];
   let startDate, endDate;
 
   useEffect(() => {
@@ -29,18 +29,18 @@ function CalendarPage() {
           startDate = new Date(data[i].date);
           endDate = new Date(data[i].date);
           endDate.setUTCMinutes(startDate.getUTCMinutes() + data[i].duration);
-          eventList.push({
+          eventLists.push({
             title: data[i].activity + "/ " + data[i].customer.firstname,
             start: startDate,
             end: endDate,
           });
         } catch (err) {
-          console.error(err);
+          console.error("Something went wrong");
         }
       }
-      setEvents(eventList);
+      setEvents(eventLists);
     } catch (err) {
-      console.log(err);
+      console.log("Something terrible happened");
     }
   };
 

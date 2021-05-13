@@ -20,11 +20,7 @@ function Customerlist() {
 
   const deleteCustomer = (params, firstname, lastname) => {
     var confirm = window.confirm(
-      "Are you sure you want to delete customer " +
-        firstname +
-        " " +
-        lastname +
-        "?"
+      "Press ok to delete customer " + firstname + " " + lastname
     );
     console.log(params);
     console.log(firstname);

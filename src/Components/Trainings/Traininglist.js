@@ -46,9 +46,7 @@ export default function Traininglist() {
   };
 
   const deleteTraining = (params) => {
-    var confirm = window.confirm(
-      "Are you sure you want to delete training no " + params
-    );
+    var confirm = window.confirm("Press Ok to delete training no " + params);
     console.log(params);
     if (confirm == true) {
       fetch("https://customerrest.herokuapp.com/api/trainings/" + params, {

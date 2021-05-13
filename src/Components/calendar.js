@@ -30,9 +30,14 @@ function CalendarPage() {
           endDate = new Date(data[i].date);
           endDate.setUTCMinutes(startDate.getUTCMinutes() + data[i].duration);
           eventLists.push({
-            title: data[i].activity + "/ " + data[i].customer.firstname,
-            start: startDate,
-            end: endDate,
+            title:
+              data[i].activity +
+              "/ " +
+              data[i].customer.firstname +
+              " " +
+              data[i].customer.lastname,
+            startingTime: startDate,
+            endingTime: endDate,
           });
         } catch (err) {
           console.error("Something went wrong");
@@ -49,8 +54,8 @@ function CalendarPage() {
       <Calendar
         localizer={localizer}
         events={events}
-        startAccessor="start"
-        endAccessor="end"
+        startAccessor="startingTime"
+        endAccessor="endingTime"
         style={{ height: "70vh", width: "80vw", margin: " auto" }}
       />
     </div>

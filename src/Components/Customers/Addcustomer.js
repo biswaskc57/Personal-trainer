@@ -49,7 +49,12 @@ export default function Addcustomer(props) {
         onClose={handleClose}
         aria-labelledby="form-dialog-title"
       >
-        <DialogTitle id="form-dialog-title">New customer</DialogTitle>
+        <DialogTitle
+          id="form-dialog-title"
+          style={{ margin: "auto", color: "green" }}
+        >
+          New customer
+        </DialogTitle>
         <DialogContent>
           <TextField
             autoFocus

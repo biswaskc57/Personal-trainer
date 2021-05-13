@@ -132,7 +132,7 @@ function Customerlist() {
         rowData={customers}
         columnDefs={columns}
         pagination={true}
-        paginationPageSize={10}
+        paginationPageSize={20}
         suppressCellSelection={true}
       />
     </div>

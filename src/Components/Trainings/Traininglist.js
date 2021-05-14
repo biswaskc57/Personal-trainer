@@ -96,7 +96,14 @@ export default function Traininglist() {
     },
     {
       headerName: "Customer",
-      field: "customer",
+      field: "customer.firstname",
+      sortable: true,
+      filter: true,
+      resizable: true,
+    },
+    {
+      headerName: "Customer",
+      field: "customer.lasttname",
       sortable: true,
       filter: true,
       resizable: true,

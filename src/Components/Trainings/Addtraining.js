@@ -137,6 +137,7 @@ export default function Addtraining(props) {
               }}
             />
             <select
+              style={{ width: "60%", height: "40%" }}
               name="customer"
               onChange={handleCustomerChange}
               defaultValue={""}

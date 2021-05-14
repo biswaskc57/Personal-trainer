@@ -9,6 +9,7 @@ const localizer = momentLocalizer(moment);
 
 function CalendarPage() {
   const [events, setEvents] = useState([]);
+  const [training, setTrainings] = useState([]);
   let eventLists = [];
   let startDate, endDate;
 
@@ -16,13 +17,17 @@ function CalendarPage() {
     getAlltrainings();
     // eslint-disable-next-line
   }, []);
-  const getAlltrainings = async () => {
-    try {
-      const { data } = await axios.get(
-        "https://customerrest.herokuapp.com/gettrainings"
-      );
-      for (var i = 0; i < data.length; i++) {
-        if (data[i].date == null) {
+
+  const fetchTrainings = () => {
+    fetch("https://customerrest.herokuapp.com/gettrainings")
+      .then((response) => response.json())
+      .then((responseData) => {
+        console.log(responseData);
+        setTrainings(responseData);
+
+  
+      for (var i = 0; i < training.length; i++) {
+        if (training[i].date == null) {
           continue;
         }
         try {
@@ -56,7 +61,7 @@ function CalendarPage() {
         events={events}
         startAccessor="startingTime"
         endAccessor="endingTime"
-        style={{ height: "70vh", width: "80vw", margin: " auto" }}
+        style={{ width: 1000, height: 600, margin: " auto" }}
       />
     </div>
   );

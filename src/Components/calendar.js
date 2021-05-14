@@ -7,14 +7,14 @@ import axios from "axios";
 
 const localizer = momentLocalizer(moment);
 
-function CalendarPage() {
+export default function CalendarPage() {
   const [events, setEvents] = useState([]);
   const [training, setTrainings] = useState([]);
   let eventLists = [];
   let startDate, endDate;
 
   useEffect(() => {
-    getAlltrainings();
+    fetchTrainings();
     // eslint-disable-next-line
   }, []);
 
@@ -24,36 +24,36 @@ function CalendarPage() {
       .then((responseData) => {
         console.log(responseData);
         setTrainings(responseData);
+        console.log(training);
 
-  
-      for (var i = 0; i < training.length; i++) {
-        if (training[i].date == null) {
-          continue;
+        for (var i = 0; i < responseData.length; i++) {
+          if (responseData[i].date == null) {
+            continue;
+          }
+          try {
+            startDate = new Date(responseData[i].date);
+            endDate = new Date(responseData[i].date);
+            endDate.setUTCMinutes(
+              startDate.getUTCMinutes() + responseData[i].duration
+            );
+            eventLists.push({
+              title:
+                responseData[i].activity +
+                "/ " +
+                responseData[i].customer.firstname +
+                " " +
+                responseData[i].customer.lastname,
+              startingTime: startDate,
+              endingTime: endDate,
+            });
+          } catch (err) {
+            console.error("Something went wrong");
+          }
+          setEvents(eventLists);
         }
-        try {
-          startDate = new Date(data[i].date);
-          endDate = new Date(data[i].date);
-          endDate.setUTCMinutes(startDate.getUTCMinutes() + data[i].duration);
-          eventLists.push({
-            title:
-              data[i].activity +
-              "/ " +
-              data[i].customer.firstname +
-              " " +
-              data[i].customer.lastname,
-            startingTime: startDate,
-            endingTime: endDate,
-          });
-        } catch (err) {
-          console.error("Something went wrong");
-        }
-      }
-      setEvents(eventLists);
-    } catch (err) {
-      console.log("Something terrible happened");
-    }
+      })
+      .catch((error) => console.log(error));
   };
-
   return (
     <div>
       <Calendar
@@ -66,5 +66,3 @@ function CalendarPage() {
     </div>
   );
 }
-
-export default CalendarPage;

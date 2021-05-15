@@ -3,29 +3,22 @@ import { momentLocalizer, Calendar } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 
-import axios from "axios";
-
 const localizer = momentLocalizer(moment);
 
 export default function CalendarPage() {
   const [events, setEvents] = useState([]);
-  const [training, setTrainings] = useState([]);
+  const [trainings, setTrainings] = useState([]);
   let eventLists = [];
   let startDate, endDate;
 
-  useEffect(() => {
-    fetchTrainings();
-    // eslint-disable-next-line
-  }, []);
-
-  const fetchTrainings = () => {
+  const fetchTrainings = async () => {
     fetch("https://customerrest.herokuapp.com/gettrainings")
       .then((response) => response.json())
       .then((responseData) => {
         console.log(responseData);
         setTrainings(responseData);
-        console.log(training);
-
+        console.log(trainings);
+        console.log(responseData.length);
         for (var i = 0; i < responseData.length; i++) {
           if (responseData[i].date == null) {
             continue;
@@ -49,11 +42,22 @@ export default function CalendarPage() {
           } catch (err) {
             console.error("Something went wrong");
           }
-          setEvents(eventLists);
+
+          console.log(eventLists);
         }
+        setEvents(eventLists);
+        console.log(eventLists);
+        console.log(events);
       })
       .catch((error) => console.log(error));
   };
+
+  useEffect(() => {
+    console.log(events);
+    fetchTrainings();
+    console.log(events);
+    // eslint-disable-next-line
+  }, []);
   return (
     <div>
       <Calendar

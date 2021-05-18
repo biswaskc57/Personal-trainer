@@ -45,31 +45,6 @@ export default function CustomerTraininglist(props) {
     setOpen(false);
   };
 
-  const columns = [
-    {
-      headerName: "Activity",
-      field: "activity",
-      sortable: true,
-      filter: true,
-      resizable: true,
-    },
-    {
-      headerName: "Duration",
-      field: "duration",
-      sortable: true,
-      filter: true,
-      resizable: true,
-    },
-
-    {
-      headerName: "Date",
-      field: "date",
-      sortable: true,
-      filter: true,
-      resizable: true,
-    },
-  ];
-
   return (
     <div style={{ height: 600, width: "90%", margin: "auto" }}>
       <Button color="primary" onClick={handleClickOpen}>

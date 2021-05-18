@@ -7,11 +7,6 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 
-import Grid from "@material-ui/core/Grid";
-import Typography from "@material-ui/core/Typography";
-import Slider from "@material-ui/core/Slider";
-
-import TimerIcon from "@material-ui/icons/Timer";
 export default function Addtraining(props) {
   const [open, setOpen] = React.useState(false);
   const [training, setTraining] = React.useState({
@@ -48,18 +43,7 @@ export default function Addtraining(props) {
     props.saveTraining(training);
     handleClose();
   };
-  const [value, setValue] = React.useState(30);
-  const handleBlur = () => {
-    if (value < 0) {
-      setValue(0);
-    } else if (value > 100) {
-      setValue(100);
-    }
-  };
-  const handleSliderChange = (event, newValue) => {
-    setValue(newValue);
-    handleInputChange(event);
-  };
+
   return (
     <div style={{ margin: "auto" }}>
       <Button
@@ -71,18 +55,24 @@ export default function Addtraining(props) {
         Add training
       </Button>
       <Dialog
+        style={{ width: "60%", color: "green" }}
         open={open}
         onClose={handleClose}
         aria-labelledby="form-dialog-title"
       >
-        <DialogTitle id="form-dialog-title">New training</DialogTitle>
-        <DialogContent>
+        <DialogTitle
+          id="form-dialog-title"
+          style={{ margin: "auto", color: "green" }}
+        >
+          New training
+        </DialogTitle>
+        <DialogContent style={{ margin: "auto", width: "70%" }}>
           <TextField
             autoFocus
             margin="dense"
             name="date"
             value={training.date}
-            type="Date"
+            type="datetime-local"
             onChange={(e) => handleInputChange(e)}
             fullWidth
           />
@@ -92,7 +82,7 @@ export default function Addtraining(props) {
             margin="dense"
             name="duration"
             value={training.duration}
-            type="number"
+            label="Duration"
             onChange={(e) => handleInputChange(e)}
             fullWidth
           />
@@ -105,54 +95,28 @@ export default function Addtraining(props) {
             label="Activity"
             fullWidth
           />
-          <Typography id="input-slider" gutterBottom>
-            Duration
-          </Typography>
-          <Grid container spacing={2} alignItems="center">
-            <Grid item>
-              <TimerIcon />
-            </Grid>
-            <Grid item xs>
-              <Slider
-                name="duration"
-                type="number"
-                value={typeof value === "number" ? value : 0}
-                onChange={handleSliderChange}
-                aria-labelledby="input-slider"
-              />
-            </Grid>
 
-            <TextField
-              margin="dense"
-              name="duration"
-              value={value}
-              onChange={(e) => handleInputChange(e)}
-              label="Duration"
-              fullWidth
-              inputProps={{
-                min: 0,
-                max: 100,
-                type: "number",
-                "aria-labelledby": "input-slider",
-              }}
-            />
-            <select
-              style={{ width: "60%", height: "40%" }}
-              name="customer"
-              onChange={handleCustomerChange}
-              defaultValue={""}
-              required
-            >
-              <option value="" disabled hidden>
-                Select
+          <select
+            style={{
+              width: "100%",
+              height: "50%",
+              marginTop: "5%",
+              border: "collapse",
+            }}
+            name="customer"
+            onChange={handleCustomerChange}
+            defaultValue={""}
+            required
+          >
+            <option value="" disabled hidden>
+              Select
+            </option>
+            {props.customers.map((customer, index) => (
+              <option key={index} value={index}>
+                {customer.firstname + " " + customer.lastname}
               </option>
-              {props.customers.map((customer, index) => (
-                <option key={index} value={index}>
-                  {customer.firstname + " " + customer.lastname}
-                </option>
-              ))}
-            </select>
-          </Grid>
+            ))}
+          </select>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="primary">

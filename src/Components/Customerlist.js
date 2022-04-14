@@ -7,12 +7,13 @@ import "ag-grid-community/dist/styles/ag-theme-material.css";
 import Addcustomer from "../Components/Customers/Addcustomer";
 import Editcustomer from "../Components/Customers/Editcustomer";
 import CustomerTraininglist from "./Customers/CustomerTraininglist";
-
+import { get } from "./Utils";
 function Customerlist() {
   const [customers, setCustomers] = useState([]);
+  const url = "https://customerrest.herokuapp.com/api/customers"
 
   useEffect(() => {
-    fetchCustomers();
+    fetchCustomers(url);
     // eslint-disable-next-line
   }, []);
 
@@ -23,7 +24,7 @@ function Customerlist() {
     console.log(params);
     console.log(firstname);
 
-    if (confirm == true) {
+    if (confirm === true) {
       console.log(params);
       fetch(params, { method: "DELETE" }).then((response) => {
         if (response.ok) fetchCustomers();
@@ -58,12 +59,12 @@ function Customerlist() {
       .catch((err) => console.error(err));
   };
 
-  const fetchCustomers = () => {
-    fetch("https://customerrest.herokuapp.com/api/customers")
-      .then((response) => response.json())
-      .then((data) => setCustomers(data.content))
-      .catch((err) => console.error(err));
-    console.log(customers);
+  const fetchCustomers = async () => {
+      const customers =  await get(url); 
+      console.log(customers);
+      if(customers){
+        setCustomers(customers.content);
+      }
   };
 
   const columns = [

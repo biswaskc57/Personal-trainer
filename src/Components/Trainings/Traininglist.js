@@ -3,26 +3,23 @@ import { AgGridReact } from "ag-grid-react";
 import moment from "moment";
 import Addtraining from "./Addtraining";
 import IconButton from "@material-ui/core/IconButton";
+import { get } from "../Utils";
 
 import DeleteIcon from "@material-ui/icons/Delete";
 export default function Traininglist() {
   const [training, setTrainings] = useState([]);
   const [customers, setCustomers] = useState([]);
+  const url = "https://customerrest.herokuapp.com/gettrainings"
   useEffect(() => {
-    fetchTrainings();
+    fetchTrainings(url);
     fetchCustomers();
     // eslint-disable-next-line
   }, []);
-  const fetchTrainings = () => {
-    fetch("https://customerrest.herokuapp.com/gettrainings")
-      .then((response) => response.json())
-      .then((responseData) => {
-        console.log(responseData);
-        setTrainings(responseData);
-
-        console.log(training);
-      })
-      .catch((error) => console.log(error));
+  const fetchTrainings = async() => {
+    const trainings =  await get(url); 
+      if(trainings){
+        setTrainings(trainings);
+      }
   };
 
   const saveTrainings = (training) => {

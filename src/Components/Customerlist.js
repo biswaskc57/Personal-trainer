@@ -7,63 +7,51 @@ import "ag-grid-community/dist/styles/ag-theme-material.css";
 import Addcustomer from "../Components/Customers/Addcustomer";
 import Editcustomer from "../Components/Customers/Editcustomer";
 import CustomerTraininglist from "./Customers/CustomerTraininglist";
-
+import { get,post,put, remove } from "./Utils";
 function Customerlist() {
-  const [customers, setCustomers] = useState([]);
+  const [customers, setCustomers] = useState();
+  const url = "https://customerrest.herokuapp.com/api/customers"
 
   useEffect(() => {
-    fetchCustomers();
+    fetchCustomers(url);
     // eslint-disable-next-line
   }, []);
 
-  const deleteCustomer = (params, firstname, lastname) => {
+  const deleteCustomer = async(params, firstname, lastname) => {
     var confirm = window.confirm(
       "Press ok to delete customer " + firstname + " " + lastname
     );
-    console.log(params);
-    console.log(firstname);
-
-    if (confirm == true) {
-      console.log(params);
-      fetch(params, { method: "DELETE" }).then((response) => {
-        if (response.ok) fetchCustomers();
-        else alert("Something terrible happened");
-      });
-    } else {
+    if (confirm === true) {
+      const res = await remove(params);
+      if(res){
+      fetchCustomers();
+      }
+    }
+    else {
       alert("Customer " + firstname + " " + lastname + " was not deleted!");
     }
   };
-  const updateCustomer = (customer, link) => {
-    window.confirm("Are you sure?");
-    fetch(link, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(customer),
-    })
-      .then((res) => fetchCustomers())
-      .catch((err) => console.error(err));
-  };
-  const saveCustomer = (customer) => {
-    window.confirm("Are you sure?");
-    fetch("https://customerrest.herokuapp.com/api/customers", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(customer),
-    })
-      .then((res) => fetchCustomers())
-      .catch((err) => console.error(err));
+  
+  const updateCustomer = async (customer, url) => {
+    const res = await put( customer, url);
+    if(res){
+      // No unique id provided for customers, so there is a need to fecth customers
+      fetchCustomers();
+    }   
   };
 
-  const fetchCustomers = () => {
-    fetch("https://customerrest.herokuapp.com/api/customers")
-      .then((response) => response.json())
-      .then((data) => setCustomers(data.content))
-      .catch((err) => console.error(err));
-    console.log(customers);
+  const saveCustomer = async (customer) => {
+    const res = await post(url, customer);
+    if(res){
+      setCustomers(customers =>[...customers, res]);
+    }   
+  };
+
+  const fetchCustomers = async () => {
+      const customers =  await get(url); 
+      if(customers){
+        setCustomers(customers.content);
+      }
   };
 
   const columns = [

@@ -3,62 +3,51 @@ import { AgGridReact } from "ag-grid-react";
 import moment from "moment";
 import Addtraining from "./Addtraining";
 import IconButton from "@material-ui/core/IconButton";
+import { get, post, remove } from "../Utils";
 
 import DeleteIcon from "@material-ui/icons/Delete";
 export default function Traininglist() {
-  const [training, setTrainings] = useState([]);
+  const [trainings, setTrainings] = useState([]);
   const [customers, setCustomers] = useState([]);
+  const urlTraining = "https://customerrest.herokuapp.com/gettrainings"
+  const urlCustomers = "https://customerrest.herokuapp.com/api/customers"
+  
   useEffect(() => {
     fetchTrainings();
     fetchCustomers();
     // eslint-disable-next-line
   }, []);
-  const fetchTrainings = () => {
-    fetch("https://customerrest.herokuapp.com/gettrainings")
-      .then((response) => response.json())
-      .then((responseData) => {
-        console.log(responseData);
-        setTrainings(responseData);
 
-        console.log(training);
-      })
-      .catch((error) => console.log(error));
+  const fetchTrainings = async() => {
+    const trainings =  await get(urlTraining); 
+      if(trainings){
+        setTrainings(trainings);
+      }
   };
 
-  const saveTrainings = (training) => {
-    window.confirm("Are you sure?");
-    fetch("https://customerrest.herokuapp.com/api/trainings", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(training),
-    })
-      .then((res) => fetchTrainings())
-      .catch((err) => console.error(err));
-  };
-  const fetchCustomers = () => {
-    fetch("https://customerrest.herokuapp.com/api/customers")
-      .then((response) => response.json())
-      .then((data) => setCustomers(data.content))
-      .catch((err) => console.error(err));
-    console.log(customers);
+  const saveTrainings = async (training) => {
+    const res = await post('https://customerrest.herokuapp.com/api/trainings', training);
+    if(res){
+      // Data gets modified in the back-end,so there is a need to fetch trainings.
+      fetchTrainings();
+    } 
   };
 
-  const deleteTraining = (params) => {
-    var confirm = window.confirm("Press Ok to delete training no " + params);
-    console.log(params);
-    if (confirm == true) {
-      fetch("https://customerrest.herokuapp.com/api/trainings/" + params, {
-        method: "DELETE",
-      }).then((response) => {
-        if (response.ok) {
-          fetchTrainings();
-          alert("Training " + params + " has been deleted");
-        } else alert("Something terrible happened");
-      });
-    } else {
-      alert("Training " + params + " was not deleted!");
+  const fetchCustomers = async () => {
+    const customers =  await get(urlCustomers); 
+    if(customers){
+      setCustomers(customers.content);
+    }
+  };
+
+  const deleteTraining = async(params) => {
+    let confirm = window.confirm("Press Ok to delete training no " + params);
+    const url = `https://customerrest.herokuapp.com/api/trainings/${params}`
+    if (confirm === true) {
+      const res = await remove(url);
+      if(res){
+      fetchTrainings();
+      }
     }
   };
 
@@ -127,12 +116,10 @@ export default function Traininglist() {
         rowHeight={60}
         rowWidth={200}
         columnDefs={columns}
-        rowData={training.map((item) => ({
+        rowData={trainings.map((item) => ({
           ...item,
           date: moment(item.date).format("LLL"),
-
           duration: item.duration + " min.",
-
           customer: item.customer.firstname + " " + item.customer.lastname,
         }))}
         pagination={true}

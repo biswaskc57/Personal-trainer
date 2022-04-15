@@ -8,26 +8,25 @@ import {
   Tooltip,
   Legend,
 } from "recharts";
+import { get } from "../Components/Utils";
 
 function Statistics() {
   const [trainings, setTrainings] = useState([]);
 
   const sum = (arr) => arr.reduce((sum, curr) => sum + curr, 0);
-  console.log(sum);
-
-  console.log("o lala lala");
+  
 
   useEffect(() => {
     fetchTrainings();
     // eslint-disable-next-line
   }, []);
 
-  const fetchTrainings = () => {
-    fetch("https://customerrest.herokuapp.com/api/trainings")
-      .then((response) => response.json())
-      .then((data) => setTrainings(data.content))
-      .catch((err) => console.error(err));
-    console.log(trainings);
+  const fetchTrainings = async() => {
+    const url = "https://customerrest.herokuapp.com/gettrainings";
+    const trainings =  await get(url); 
+      if(trainings){
+        setTrainings(trainings);
+      }
   };
 
   const activities = trainings
@@ -49,16 +48,11 @@ function Statistics() {
     return acc;
   }, {});
 
-  console.log(activities);
-  console.log(trainings);
-  console.log(totalSum);
-
   const data = Object.keys(activities).reduce((acc, key) => {
-    acc.push({ name: key, sum: totalSum[key] });
+    acc.push({ Name: key, Duration: totalSum[key]})
     return acc;
   }, []);
 
-  console.log(data);
 
   return (
     <div style={{ margin: " auto" }}>
@@ -78,11 +72,11 @@ function Statistics() {
         }}
       >
         <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="name" />
-        <YAxis />
+        <XAxis dataKey="Name" />
+        <YAxis/>
         <Tooltip />
         <Legend />
-        <Bar dataKey="sum" fill="#8884d8" />
+        <Bar dataKey="Duration" fill="#8884d8" />
       </BarChart>
     </div>
   );

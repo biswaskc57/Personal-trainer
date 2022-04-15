@@ -3,7 +3,7 @@ import { AgGridReact } from "ag-grid-react";
 import moment from "moment";
 import Addtraining from "./Addtraining";
 import IconButton from "@material-ui/core/IconButton";
-import { get, post } from "../Utils";
+import { get, post, remove } from "../Utils";
 
 import DeleteIcon from "@material-ui/icons/Delete";
 export default function Traininglist() {
@@ -11,23 +11,24 @@ export default function Traininglist() {
   const [customers, setCustomers] = useState([]);
   const urlTraining = "https://customerrest.herokuapp.com/gettrainings"
   const urlCustomers = "https://customerrest.herokuapp.com/api/customers"
+  
   useEffect(() => {
     fetchTrainings();
     fetchCustomers();
     // eslint-disable-next-line
   }, []);
+
   const fetchTrainings = async() => {
     const trainings =  await get(urlTraining); 
       if(trainings){
         setTrainings(trainings);
       }
   };
-  console.log(trainings);
+
   const saveTrainings = async (training) => {
     const res = await post('https://customerrest.herokuapp.com/api/trainings', training);
-    console.log("res", res)
     if(res){
-      //setTrainings(trainings =>[...trainings, res]);
+      // Data gets modified in the back-end,so there is a need to fetch trainings.
       fetchTrainings();
     } 
   };
@@ -37,22 +38,16 @@ export default function Traininglist() {
     if(customers){
       setCustomers(customers.content);
     }
-};
+  };
 
-  const deleteTraining = (params) => {
-    var confirm = window.confirm("Press Ok to delete training no " + params);
-    console.log(params);
+  const deleteTraining = async(params) => {
+    let confirm = window.confirm("Press Ok to delete training no " + params);
+    const url = `https://customerrest.herokuapp.com/api/trainings/${params}`
     if (confirm === true) {
-      fetch("https://customerrest.herokuapp.com/api/trainings/" + params, {
-        method: "DELETE",
-      }).then((response) => {
-        if (response.ok) {
-          fetchTrainings();
-          alert("Training " + params + " has been deleted");
-        } else alert("Something terrible happened");
-      });
-    } else {
-      alert("Training " + params + " was not deleted!");
+      const res = await remove(url);
+      if(res){
+      fetchTrainings();
+      }
     }
   };
 
@@ -124,9 +119,7 @@ export default function Traininglist() {
         rowData={trainings.map((item) => ({
           ...item,
           date: moment(item.date).format("LLL"),
-
           duration: item.duration + " min.",
-
           customer: item.customer.firstname + " " + item.customer.lastname,
         }))}
         pagination={true}

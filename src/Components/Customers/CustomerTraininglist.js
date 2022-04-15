@@ -4,7 +4,7 @@ import moment from "moment";
 import { Table } from "react-bootstrap";
 
 import Button from "@material-ui/core/Button";
-
+import { get } from "../Utils";
 import "ag-grid-community/dist/styles/ag-grid.css";
 import "ag-grid-community/dist/styles/ag-theme-material.css";
 
@@ -23,21 +23,14 @@ export default function CustomerTraininglist(props) {
     // eslint-disable-next-line
   }, []);
 
-  const fetchCustomers = () => {
-    console.log(props.link);
-    console.log(props.firstname);
-    fetch(props.link)
-      .then((response) => response.json())
-      .then((data) => setTrainings(data.content))
-      .catch((err) => console.error(err));
-  };
+  const fetchCustomers = async () => {
+    const customers =  await get(props.link); 
+    if(customers){
+      setTrainings(customers.content);
+    }
+};
 
   const handleClickOpen = () => {
-    console.log(props.link);
-
-    console.log(training);
-
-    console.log(training.content);
     setOpen(true);
   };
 

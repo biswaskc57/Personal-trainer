@@ -7,7 +7,7 @@ import "ag-grid-community/dist/styles/ag-theme-material.css";
 import Addcustomer from "../Components/Customers/Addcustomer";
 import Editcustomer from "../Components/Customers/Editcustomer";
 import CustomerTraininglist from "./Customers/CustomerTraininglist";
-import { get,post } from "./Utils";
+import { get,post,put, remove } from "./Utils";
 function Customerlist() {
   const [customers, setCustomers] = useState();
   const url = "https://customerrest.herokuapp.com/api/customers"
@@ -17,34 +17,27 @@ function Customerlist() {
     // eslint-disable-next-line
   }, []);
 
-  const deleteCustomer = (params, firstname, lastname) => {
+  const deleteCustomer = async(params, firstname, lastname) => {
     var confirm = window.confirm(
       "Press ok to delete customer " + firstname + " " + lastname
     );
-    console.log(params);
-    console.log(firstname);
-
     if (confirm === true) {
-      console.log(params);
-      fetch(params, { method: "DELETE" }).then((response) => {
-        if (response.ok) fetchCustomers();
-        else alert("Something terrible happened");
-      });
-    } else {
+      const res = await remove(params);
+      if(res){
+      fetchCustomers();
+      }
+    }
+    else {
       alert("Customer " + firstname + " " + lastname + " was not deleted!");
     }
   };
-  const updateCustomer = (customer, link) => {
-    window.confirm("Are you sure?");
-    fetch(link, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(customer),
-    })
-      .then((res) => fetchCustomers())
-      .catch((err) => console.error(err));
+  
+  const updateCustomer = async (customer, url) => {
+    const res = await put( customer, url);
+    if(res){
+      // No unique id provided for customers, so there is a need to fecth customers
+      fetchCustomers();
+    }   
   };
 
   const saveCustomer = async (customer) => {
@@ -56,7 +49,6 @@ function Customerlist() {
 
   const fetchCustomers = async () => {
       const customers =  await get(url); 
-      console.log(customers);
       if(customers){
         setCustomers(customers.content);
       }

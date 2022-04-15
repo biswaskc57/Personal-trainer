@@ -2,62 +2,48 @@ import React, { useEffect, useState } from "react";
 import { momentLocalizer, Calendar } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-
+import { get } from "../Components/Utils";
 const localizer = momentLocalizer(moment);
 
 export default function CalendarPage() {
   const [events, setEvents] = useState([]);
-  const [trainings, setTrainings] = useState([]);
   let eventLists = [];
   let startDate, endDate;
 
-  const fetchTrainings = async () => {
-    fetch("https://customerrest.herokuapp.com/gettrainings")
-      .then((response) => response.json())
-      .then((responseData) => {
-        console.log(responseData);
-        setTrainings(responseData);
-        console.log(trainings);
-        console.log(responseData.length);
-        for (var i = 0; i < responseData.length; i++) {
-          if (responseData[i].date == null) {
-            continue;
-          }
-          try {
-            startDate = new Date(responseData[i].date);
-            endDate = new Date(responseData[i].date);
-            endDate.setUTCMinutes(
-              startDate.getUTCMinutes() + responseData[i].duration
-            );
-            eventLists.push({
-              title:
-                responseData[i].activity +
-                "/ " +
-                responseData[i].customer.firstname +
-                " " +
-                responseData[i].customer.lastname,
-              startingTime: startDate,
-              endingTime: endDate,
-            });
-          } catch (err) {
-            console.error("Something went wrong");
-          }
-
-          console.log(eventLists);
-        }
-        setEvents(eventLists);
-        console.log(eventLists);
-        console.log(events);
-      })
-      .catch((error) => console.log(error));
-  };
-
   useEffect(() => {
-    console.log(events);
     fetchTrainings();
-    console.log(events);
     // eslint-disable-next-line
   }, []);
+
+  const fetchTrainings = async () => {
+    try {
+      const url = "https://customerrest.herokuapp.com/gettrainings";
+      const trainings = await get(url);
+      for (var i = 0; i < trainings.length; i++) {
+        if (!trainings[i].date) {
+          continue;
+        }
+        startDate = new Date(trainings[i].date);
+        endDate = new Date(trainings[i].date);
+        endDate.setUTCMinutes(
+          startDate.getUTCMinutes() + trainings[i].duration
+        );
+        eventLists.push({
+          title:
+            trainings[i].activity +
+            "/ " +
+            trainings[i].customer.firstname +
+            " " +
+            trainings[i].customer.lastname,
+          startingTime: startDate,
+          endingTime: endDate,
+        });
+      }
+      setEvents(eventLists);
+    } catch (err) {
+      console.error("Error");
+    }
+  };
   return (
     <div>
       <Calendar

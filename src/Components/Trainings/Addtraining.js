@@ -36,7 +36,6 @@ export default function Addtraining(props) {
         customer: props.customers[event.target.value].links[0].href,
       });
     }
-    //console.log(training.customer);
   };
 
   const addTraining = () => {

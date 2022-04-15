@@ -7,9 +7,9 @@ import "ag-grid-community/dist/styles/ag-theme-material.css";
 import Addcustomer from "../Components/Customers/Addcustomer";
 import Editcustomer from "../Components/Customers/Editcustomer";
 import CustomerTraininglist from "./Customers/CustomerTraininglist";
-import { get } from "./Utils";
+import { get,post } from "./Utils";
 function Customerlist() {
-  const [customers, setCustomers] = useState([]);
+  const [customers, setCustomers] = useState();
   const url = "https://customerrest.herokuapp.com/api/customers"
 
   useEffect(() => {
@@ -46,17 +46,12 @@ function Customerlist() {
       .then((res) => fetchCustomers())
       .catch((err) => console.error(err));
   };
-  const saveCustomer = (customer) => {
-    window.confirm("Are you sure?");
-    fetch("https://customerrest.herokuapp.com/api/customers", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(customer),
-    })
-      .then((res) => fetchCustomers())
-      .catch((err) => console.error(err));
+
+  const saveCustomer = async (customer) => {
+    const res = await post(url, customer);
+    if(res){
+      setCustomers(customers =>[...customers, res]);
+    }   
   };
 
   const fetchCustomers = async () => {

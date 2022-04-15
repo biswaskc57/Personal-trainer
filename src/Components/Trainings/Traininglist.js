@@ -3,11 +3,11 @@ import { AgGridReact } from "ag-grid-react";
 import moment from "moment";
 import Addtraining from "./Addtraining";
 import IconButton from "@material-ui/core/IconButton";
-import { get } from "../Utils";
+import { get, post } from "../Utils";
 
 import DeleteIcon from "@material-ui/icons/Delete";
 export default function Traininglist() {
-  const [training, setTrainings] = useState([]);
+  const [trainings, setTrainings] = useState([]);
   const [customers, setCustomers] = useState([]);
   const urlTraining = "https://customerrest.herokuapp.com/gettrainings"
   const urlCustomers = "https://customerrest.herokuapp.com/api/customers"
@@ -22,18 +22,14 @@ export default function Traininglist() {
         setTrainings(trainings);
       }
   };
-
-  const saveTrainings = (training) => {
-    window.confirm("Are you sure?");
-    fetch("https://customerrest.herokuapp.com/api/trainings", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(training),
-    })
-      .then((res) => fetchTrainings())
-      .catch((err) => console.error(err));
+  console.log(trainings);
+  const saveTrainings = async (training) => {
+    const res = await post('https://customerrest.herokuapp.com/api/trainings', training);
+    console.log("res", res)
+    if(res){
+      //setTrainings(trainings =>[...trainings, res]);
+      fetchTrainings();
+    } 
   };
 
   const fetchCustomers = async () => {
@@ -125,7 +121,7 @@ export default function Traininglist() {
         rowHeight={60}
         rowWidth={200}
         columnDefs={columns}
-        rowData={training.map((item) => ({
+        rowData={trainings.map((item) => ({
           ...item,
           date: moment(item.date).format("LLL"),
 

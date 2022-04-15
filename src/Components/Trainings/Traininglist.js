@@ -9,14 +9,15 @@ import DeleteIcon from "@material-ui/icons/Delete";
 export default function Traininglist() {
   const [training, setTrainings] = useState([]);
   const [customers, setCustomers] = useState([]);
-  const url = "https://customerrest.herokuapp.com/gettrainings"
+  const urlTraining = "https://customerrest.herokuapp.com/gettrainings"
+  const urlCustomers = "https://customerrest.herokuapp.com/api/customers"
   useEffect(() => {
-    fetchTrainings(url);
+    fetchTrainings();
     fetchCustomers();
     // eslint-disable-next-line
   }, []);
   const fetchTrainings = async() => {
-    const trainings =  await get(url); 
+    const trainings =  await get(urlTraining); 
       if(trainings){
         setTrainings(trainings);
       }
@@ -34,18 +35,18 @@ export default function Traininglist() {
       .then((res) => fetchTrainings())
       .catch((err) => console.error(err));
   };
-  const fetchCustomers = () => {
-    fetch("https://customerrest.herokuapp.com/api/customers")
-      .then((response) => response.json())
-      .then((data) => setCustomers(data.content))
-      .catch((err) => console.error(err));
-    console.log(customers);
-  };
+
+  const fetchCustomers = async () => {
+    const customers =  await get(urlCustomers); 
+    if(customers){
+      setCustomers(customers.content);
+    }
+};
 
   const deleteTraining = (params) => {
     var confirm = window.confirm("Press Ok to delete training no " + params);
     console.log(params);
-    if (confirm == true) {
+    if (confirm === true) {
       fetch("https://customerrest.herokuapp.com/api/trainings/" + params, {
         method: "DELETE",
       }).then((response) => {
